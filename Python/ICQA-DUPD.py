@@ -1,37 +1,26 @@
 from skimage.io import imread
 
 
-def Hist(img):
+LEVELS = 256
+
+def hist(img):
     w = img.shape[0]
     h = img.shape[1]
 
-    H = dict()
-    
-    for i in range(256):
-        H[i] = 0
-        
+    H = [0] * LEVELS
     for x in range(w):
         for y in range(h):
             v = img[x, y]
-            H[v] = H.get(v, 0) + 1
+            H[v] = H[v] + 1
             
     return H
 
 def pdf(img):
     w = img.shape[0]
     h = img.shape[1]
-    size = w * h
-    
-    H = Hist(img)
-    r = dict()
-    
-    for i in range(256):
-        if H[i] == 0:
-            r[i] = 0.0
-        else:
-            r[i] = H[i] / size
-            
-    return r
+    N = w * h
+    return list(map(lambda h: h / N, hist(img)))
+
 
 # ICQA-DUPD
 # Image Contrast Quality Assessment based on the Degree of Uniformity in Probability Distribution
